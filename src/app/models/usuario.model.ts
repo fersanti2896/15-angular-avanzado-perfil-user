@@ -9,4 +9,8 @@ export class Usuario {
         public role?: string,
         public img?: string,
     ) {}
+
+    imprimirUsuario() {
+        console.log( this.nombre );
+    }
 }

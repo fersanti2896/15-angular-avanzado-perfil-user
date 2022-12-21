@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 
 import { LoginForm } from '../interfaces/login-form.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
+import { Usuario } from '../models/usuario.model';
 
 const base_url = environment.base_url;
 declare const google: any;
@@ -16,6 +17,8 @@ declare const google: any;
   providedIn: 'root'
 })
 export class UsuarioService {
+  public auth2: any;
+  public usuario!: Usuario;
 
   constructor( private http: HttpClient,
                private router: Router ) { }
@@ -30,6 +33,10 @@ export class UsuarioService {
     })
     .pipe(
       tap(( resp: any ) => {
+        const { email, google, nombre, role, uid, img } = resp.usuario;
+        this.usuario = new Usuario( nombre, email, '', img, google, uid );
+        this.usuario.imprimirUsuario();
+
         localStorage.setItem('token', resp.token);
       }),
       map( resp => true),
