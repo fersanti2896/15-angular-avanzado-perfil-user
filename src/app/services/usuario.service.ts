@@ -35,7 +35,6 @@ export class UsuarioService {
       tap(( resp: any ) => {
         const { email, google, nombre, role, uid, img } = resp.usuario;
         this.usuario = new Usuario( nombre, email, '', img, google, uid );
-        this.usuario.imprimirUsuario();
 
         localStorage.setItem('token', resp.token);
       }),
