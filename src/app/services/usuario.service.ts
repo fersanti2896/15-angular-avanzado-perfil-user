@@ -24,11 +24,9 @@ export class UsuarioService {
                private router: Router ) { }
 
   validarToken(): Observable<boolean> {
-    const token = localStorage.getItem('token') || '';
-
     return this.http.get( `${ base_url }/login/renew`, {   
       headers: {
-        'x-token': token
+        'x-token': this.token
       }
     })
     .pipe(
@@ -42,6 +40,16 @@ export class UsuarioService {
       }),
       catchError( error => of(false))
     );
+  }
+
+  get token(): string {
+    return localStorage.getItem('token') || '';
+  }
+
+  get uid(): string {
+    console.log(`UID: ${ this.usuario.uid} `);
+
+    return this.usuario.uid || '';
   }
 
   logout() {
@@ -59,6 +67,14 @@ export class UsuarioService {
                         localStorage.setItem('token', resp.token);
                       })
                     );
+  }
+
+  actualizarUsuario( data: { email: string, nombre: string } ) {
+    return this.http.put( `${ base_url }/usuarios/${ this.uid }`, data, {
+      headers: {
+        'x-token': this.token
+      }
+    });  
   }
 
   login( formData: any ) {

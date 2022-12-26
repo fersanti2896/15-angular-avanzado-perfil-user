@@ -4,7 +4,7 @@ import { ComponentsModule } from '../components/components.module';
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router'
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProgressComponent } from './progress/progress.component';
@@ -31,6 +31,7 @@ import { PerfilComponent } from './perfil/perfil.component';
     ComponentsModule,
     FormsModule, 
     SharedModule,
+    ReactiveFormsModule,
     RouterModule
   ], 
   exports: [ 
