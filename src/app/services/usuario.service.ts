@@ -22,7 +22,10 @@ export class UsuarioService {
 
   constructor( private http: HttpClient,
                private router: Router ) { }
-
+  /**
+   * Función que renueva el token cada vez que el usuario inicia sesión.
+   * @returns Retorna verdadero y guarda el token en el localStorage
+   */  
   validarToken(): Observable<boolean> {
     return this.http.get( `${ base_url }/login/renew`, {   
       headers: {
@@ -47,11 +50,12 @@ export class UsuarioService {
   }
 
   get uid(): string {
-    console.log(`UID: ${ this.usuario.uid} `);
-
     return this.usuario!.uid || '';
   }
 
+  /**
+   * Función que remueve el token del localStorage y cierra sesión.
+   */
   logout() {
     localStorage.removeItem('token');
 
@@ -60,6 +64,11 @@ export class UsuarioService {
     })
   }
 
+  /**
+   * Función que crear el usuario desde el login y lo manda al backend. 
+   * @param {RegisterForm} formData Data del usuario que se envía al backend 
+   * @returns 
+   */
   crearUsuario( formData: RegisterForm ) {
     return this.http.post( `${ base_url }/usuarios`, formData )
                     .pipe(
@@ -69,13 +78,17 @@ export class UsuarioService {
                     );
   }
 
+  /**
+   * Función que actualiza la información del usuario.
+   * @param {string, string, string} data Argumentos que se actualizan. 
+   * @returns 
+   */
   actualizarUsuario( data: { email: string, nombre: string, role: string } ) {
     data = {
       ...data,
       role: this.usuario.role!
     };
 
-    console.log(this.usuario)
     return this.http.put( `${ base_url }/usuarios/${ this.uid }`, data, {
       headers: {
         'x-token': this.token
@@ -83,6 +96,11 @@ export class UsuarioService {
     });  
   }
 
+  /**
+   * Función que valida el inicio de sesión.
+   * @param {any} formData Data que se envía al backend para iniciar sesión. 
+   * @returns 
+   */
   login( formData: any ) {
     const formLogin: LoginForm = formData;
 
@@ -94,6 +112,11 @@ export class UsuarioService {
                     );
   }
 
+  /**
+   * Función que inicia sesión por medio de Google.
+   * @param {string} token Token del usuario. 
+   * @returns 
+   */
   loginGogle( token: string ) {
     return this.http.post( `${ base_url }/login/google`, { token } )
                     .pipe(

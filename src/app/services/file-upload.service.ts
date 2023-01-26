@@ -12,9 +12,9 @@ export class FileUploadService {
 
   /**
    * 
-   * @param {File} archivo Ejemplo: Imagen de JPG o PNG
-   * @param {string} tipo 
-   * @param {string} id  
+   * @param {File} archivo Archivo | Ejemplo: Imagen de JPG o PNG
+   * @param {string} tipo  Tipo que se agregará la imagen si es un Usuario, Médico u Hospital
+   * @param {string} id    
    * @returns 
    */
   async actualizarFoto( archivo: File, tipo: 'usuarios'|'medicos'|'hospitales', id: string ) {
