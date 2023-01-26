@@ -43,15 +43,23 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Avatar</h4>
+                <h4 class="card-title">Foto del Perfil</h4>
                 <h6 class="card-subtitle">Imagen del Usuario</h6>
 
-                <img src="">
-
-                <input type="file">
+                <div class="text-center">
+                    <img *ngIf="!imgTemp" [src]="usuario.ImagenUrl" class="img-avatar">
+                    <img *ngIf="imgTemp" [src]="imgTemp" class="img-avatar">
+                </div>
                 <br><br>
 
-                <button type="button" class="btn btn-success btn-block waves-effect waves-light m-r-10">
+                <input type="file"
+                       (change)="cambiarImagen($event)">
+                <br><br>
+
+                <button type="button" 
+                        class="btn btn-success btn-block waves-effect waves-light m-r-10"
+                        [disabled]="!imagenSubida"
+                        (click)="subirImagen()">
                     <i class="fa fa-save"></i>
                     Cambiar Imagen
                 </button>

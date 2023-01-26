@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Usuario } from 'src/app/models/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { FileUploadService } from '../../services/file-upload.service';
 
 @Component({
   selector: 'app-perfil',
@@ -12,9 +13,12 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 export class PerfilComponent implements OnInit {
   public perfilForm!: FormGroup;
   public usuario!: Usuario;
+  public imagenSubida!: any;
+  public imgTemp: any = '';
 
   constructor( private fb: FormBuilder,
-               private usuarioService: UsuarioService ) {
+               private usuarioService: UsuarioService,
+               private fileUploadService: FileUploadService ) {
     this.usuario = usuarioService.usuario;              
   }
 
@@ -25,6 +29,9 @@ export class PerfilComponent implements OnInit {
     });
   }
 
+  /**
+   * Funcion que actualiza la información del usuario
+   */
   actualizarPerfil() {
     this.usuarioService.actualizarUsuario( this.perfilForm.value )
                        .subscribe( resp => {
@@ -32,5 +39,35 @@ export class PerfilComponent implements OnInit {
                           this.usuario.nombre = nombre;
                           this.usuario.email = email;
                        } ); 
+  }
+
+  /**
+   * Función que recibe una imagen y lo asocia al parametro imagenSubida
+   * @param {any} event Ejemplo: Archivo de imagen JPN o PNG, etc.  
+   * @returns 
+   */
+  cambiarImagen( event: any ) {
+    if( !event.target.files[0] ){
+      this.imagenSubida = null;
+      this.imgTemp = null;
+    } else {
+      const file = event.target.files[0];
+      this.imagenSubida = file;
+ 
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+ 
+      reader.onloadend = () => {
+        this.imgTemp = reader.result;
+      }
+    }
+  }
+
+  /**
+   * Función que actualiza la imagen en el servicio de FileUpload
+   */
+  subirImagen() {
+    this.fileUploadService.actualizarFoto(this.imagenSubida, 'usuarios', this.usuario.uid!)
+                          .then( img => this.usuario.img = img );
   }
 }
