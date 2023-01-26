@@ -31,8 +31,8 @@ export class UsuarioService {
     })
     .pipe(
       map(( resp: any ) => {
-        const { email, google, nombre, role, uid, img = '' } = resp.usuario;
-        this.usuario = new Usuario( nombre, email, '', img, google, uid );
+        const { email, google, nombre, role, img = '', uid } = resp.usuario;
+        this.usuario = new Usuario( nombre, email, '', img, google, role, uid );
 
         localStorage.setItem('token', resp.token);
 
@@ -49,7 +49,7 @@ export class UsuarioService {
   get uid(): string {
     console.log(`UID: ${ this.usuario.uid} `);
 
-    return this.usuario.uid || '';
+    return this.usuario!.uid || '';
   }
 
   logout() {
@@ -69,7 +69,13 @@ export class UsuarioService {
                     );
   }
 
-  actualizarUsuario( data: { email: string, nombre: string } ) {
+  actualizarUsuario( data: { email: string, nombre: string, role: string } ) {
+    data = {
+      ...data,
+      role: this.usuario.role!
+    };
+
+    console.log(this.usuario)
     return this.http.put( `${ base_url }/usuarios/${ this.uid }`, data, {
       headers: {
         'x-token': this.token
